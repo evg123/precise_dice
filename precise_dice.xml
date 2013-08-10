@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+* Eric Vandegriek 
+* 
+* 2013
+-->
+<Module>
+    <ModulePrefs title="Precise Dice">
+        <Require feature="rpc" />
+        <Require feature="views" />
+        <Require feature="locked-domain" />
+    </ModulePrefs>
+    <Content type="html"><![CDATA[     
+<html>
+<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/3663023/code/precise_dice.js"></script>
+<link type="text/css" rel="stylesheet" href="https://dl.dropboxusercontent.com/u/3663023/code/precise_dice.css"/>
+<body>
+
+<div id='title_bar'>
+    Precise Dice
+</div>
+
+<div id='left_div'>
+    <div id='dice_boxes'></div>
+    <div id='add_box_div' class='dice_box'>
+        <input type='button' value=' + ' id='add_box'/>
+    </div>
+</div>    
+<div id="message_box"></div>
+
+</script>
+</body>
+]]>
+</Content>
+</Module>
+

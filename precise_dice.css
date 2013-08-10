@@ -1,0 +1,98 @@
+/*
+* Eric Vandegriek 
+* 
+* 2013
+*/
+
+div.dice_box {
+    margin:5px;
+    margin-top:15px;
+    padding:5px;
+}
+
+input.dice_input {
+    width:285px;
+    height:30px;
+}
+
+div.message {
+    padding:5px;
+    height:55px;
+    overflow:auto;
+}
+
+div.odd {
+    background:#f3f0f4;
+}
+
+div.even {
+    background:f0f0f0;
+}
+
+span.total {
+    font-size:24;
+    font-weight:bold;
+}
+
+span.crit {
+    color:blue;
+}
+
+span.result {
+    font-weight:bold;
+}
+
+span.message {
+    margin-left:70px;
+    padding:5;
+    display:block;
+}
+
+img.message {
+    width:55px;
+    height:55px;
+    float:left;
+}
+
+body {
+    background:#f3f0f4;
+}
+
+#title_bar {
+    background:white;
+    max-width:980px;
+    margin:10px;
+    /*margin-left:160px;*/
+    /*margin-right:160px;*/
+    padding:20px;
+    border:solid 1px;
+    border-top:solid 9px #b00000;
+    text-align:center;
+    font-size:40;
+    font-weight:bold;
+}
+
+#left_div {
+    float:left;
+    width:460px;
+}
+
+#dice_boxes {
+    
+}
+
+#add_box_div {
+    
+}
+
+#message_box {
+    background:white;
+    overflow:auto;
+    border:solid 1px;
+    border-top:solid 9px #b00000;
+    margin-left:460px;
+    margin-top:15px;
+    max-width:570px;
+    max-height:650px;
+    min-height:550px;
+}
