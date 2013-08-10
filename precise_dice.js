@@ -17,7 +17,6 @@ function init() {
         function(eventObj) {
             if (eventObj.isApiReady) {
                 gapi.hangout.data.onStateChanged.add(function(stateChangeEvent) {
-                    MSG_BOX_FLIP = !MSG_BOX_FLIP;
                     update_messages();
                 });
             }
@@ -120,9 +119,9 @@ function roll_dice_box(d_str) {
     var person = gapi.hangout.getLocalParticipant().person
     var name = person.displayName;
     var roll_str = name.split(' ')[0] + " rolled " + d_str;
-    var alt_txt = (name == 'Ben Adams') ? "I'm dumb" : "";
+    var title_txt = (name == 'Ben Adams') ? "I&#8217;m dumb" : "";
     var img_url = person.image.url;
-    var img_str = "<img src='"+img_url+"' alt='"+alt_txt+"' class='message'>";
+    var img_str = "<img src='"+img_url+"' title='"+title_txt+"' class='message'>";
     
     var keys = gapi.hangout.data.getKeys().sort(msg_sort);
     var remove_key = [];
@@ -140,6 +139,7 @@ function roll_dice_box(d_str) {
     var add_key_val = {};
     add_key_val['message_'+(last_num+1)] = msg_str;
     
+    MSG_BOX_FLIP = !MSG_BOX_FLIP;
     gapi.hangout.data.submitDelta(add_key_val, remove_key);
 }
 
@@ -151,7 +151,7 @@ function update_messages() {
     
     for (var i = keys.length-1; i >= 0; i--) {
         var off = MSG_BOX_FLIP ? 1 : 0;
-        var sign = ((i + off) % 2) ? 'odd' : 'even';
+        var sign = ((i+keys.length + off) % 2) ? 'odd' : 'even';
         messages += " \
         <div class='message "+sign+"'> \
         " + gapi.hangout.data.getValue(keys[i]) + " \
@@ -212,6 +212,7 @@ function parse_dice_string(d_str) {
     for (i = 0; i < dice.length; i++) {
         var mag = Math.abs(dice[i]);
         var result = Math.floor(Math.random() * mag) + 1;
+        if (mag == 0) result = 0;
         
         if (dice[i] < 0) {
             op_sign = '-';

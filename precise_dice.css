@@ -17,7 +17,7 @@ input.dice_input {
 
 div.message {
     padding:5px;
-    height:55px;
+    height:60px;
     overflow:auto;
 }
 
@@ -26,7 +26,7 @@ div.odd {
 }
 
 div.even {
-    background:f0f0f0;
+    background:#white;
 }
 
 span.total {
@@ -49,8 +49,8 @@ span.message {
 }
 
 img.message {
-    width:55px;
-    height:55px;
+    width:60px;
+    height:60px;
     float:left;
 }
 
@@ -62,8 +62,6 @@ body {
     background:white;
     max-width:980px;
     margin:10px;
-    /*margin-left:160px;*/
-    /*margin-right:160px;*/
     padding:20px;
     border:solid 1px;
     border-top:solid 9px #b00000;
@@ -93,6 +91,5 @@ body {
     margin-left:460px;
     margin-top:15px;
     max-width:570px;
-    max-height:650px;
-    min-height:550px;
+    height:630px;
 }
