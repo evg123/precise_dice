@@ -8,11 +8,15 @@
 gadgets.util.registerOnLoadHandler(init);
 
 MAX_MESSAGES = 50;
+MAX_DICE_BOXES = 11;
 DICE_BOXES = 1;
 MSG_BOX_FLIP = false;
+PREV_ROLL_TIME = 0;
+ROLL_COOLDOWN = 325;
+INPUT_CHECK_DELAY = 650;
+INPUT_CHECK_TIMER = null;
 
 function init() {
-    // When API is ready...                                                         
     gapi.hangout.onApiReady.add(
         function(eventObj) {
             if (eventObj.isApiReady) {
@@ -37,10 +41,20 @@ function get_d_str_array() {
     return d_str_array;
 }
 
+function update_add_box_btn() {
+    var box = document.getElementById('add_box');
+    if (DICE_BOXES >= MAX_DICE_BOXES) {
+        box.disabled = true;
+    } else {
+        box.disabled = false;
+    }
+}
+
 function add_dice_box() {
     var d_str_array = get_d_str_array();
     d_str_array.push('');
     DICE_BOXES += 1;
+    update_add_box_btn();
     update_db_num(d_str_array);
 }
 
@@ -48,7 +62,16 @@ function remove_dice_box(box_num) {
     var d_str_array = get_d_str_array();
     d_str_array.splice(box_num, 1);
     DICE_BOXES -= 1;
+    update_add_box_btn();
     update_db_num(d_str_array);
+}
+
+function check_db_input(d_input) {
+    if (d_input.value && parse_dice_string(d_input.value) == 'Error') {
+        d_input.className = 'dice_input error';
+    } else {
+        d_input.className = 'dice_input';
+    }
 }
 
 function update_db_num(d_str_array) {
@@ -60,9 +83,9 @@ function update_db_num(d_str_array) {
         boxes_html += "\
         <div id='dice_box_"+i+"' class='dice_box'> \
             <input type='text' id='db_input_"+i+"' class='dice_input'/> \
-            <input type='button' value='roll' id='db_roll_"+i+"'/> \
-            <input type='button' value='clear' id='db_clear_"+i+"'/> \
-            <input type='button' value='-' id='db_minus_"+i+"' "+disabled+"/> \
+            <input type='button' value='roll' class='button' id='db_roll_"+i+"'/> \
+            <input type='button' value='clear' class='button' id='db_clear_"+i+"'/> \
+            <input type='button' value='-' class='button' id='db_minus_"+i+"' "+disabled+"/> \
         </div> \
         ";
     }
@@ -72,6 +95,13 @@ function update_db_num(d_str_array) {
         var d_roll = document.getElementById("db_roll_"+i);
         var d_clear = document.getElementById("db_clear_"+i);
         var d_minus = document.getElementById("db_minus_"+i);
+        d_input.oninput = (function() {
+            var cur_d_input = d_input;
+            return function() {
+                window.clearTimeout(INPUT_CHECK_TIMER);
+                INPUT_CHECK_TIMER = window.setTimeout(function() { check_db_input(cur_d_input); }, INPUT_CHECK_DELAY);
+            }
+        })();
         d_input.onkeypress = (function(event) {
             var cur_d_input = d_input;
             return function(event) {
@@ -111,6 +141,12 @@ function msg_sort(ma, mb) {
 }
 
 function roll_dice_box(d_str) {
+    var cur_time = new Date().getTime();
+    if (cur_time - PREV_ROLL_TIME < ROLL_COOLDOWN) {
+        return;
+    }
+    PREV_ROLL_TIME = cur_time;
+    
     var result_str = parse_dice_string(d_str);
     if (result_str == 'Error') {
         return;
@@ -164,7 +200,7 @@ function update_messages() {
 
 function parse_dice_string(d_str) {
     d_str = d_str.replace(/\s/g, '');
-    var splits = d_str.split(/([\sd+-])/g);
+    var splits = d_str.split(/([\D])/g);
     splits.push('end');
     var stack = [];
     var dice = [];
@@ -240,7 +276,7 @@ function parse_dice_string(d_str) {
         } else {
             op_sign = ' + ';
         }
-        output += op_sign + modifier;
+        output += op_sign + Math.abs(modifier);
         total += modifier;
     }
     if (isNaN(total)) {
